@@ -1,55 +1,53 @@
 """
 llm.py
 ------
-Handles interaction with the OpenAI language model
-using the OpenAI Python SDK v2.x.
+Hybrid rule-based technical question generator for TalentScout.
+Returns a LIST of questions to be asked one at a time.
 """
-
-import os
-from dotenv import load_dotenv
-from openai import OpenAI
-from prompts import TECHNICAL_QUESTION_PROMPT
-
-# Load environment variables
-load_dotenv()
-
-# Create OpenAI client (v2 SDK automatically reads OPENAI_API_KEY)
-client = OpenAI()
-
 
 def generate_technical_questions(desired_role, experience, tech_stack):
     """
-    Generates 3–5 technical interview questions based on the candidate's tech stack.
+    Generate 3–5 technical interview questions based on tech stack.
     """
 
-    # Defensive checks (professional practice)
-    if not tech_stack:
-        raise ValueError("Tech stack is empty")
+    tech_stack = tech_stack.lower()
 
-    prompt = TECHNICAL_QUESTION_PROMPT.format(
-        desired_role=desired_role,
-        experience=experience,
-        tech_stack=tech_stack
-    )
+    QUESTION_BANK = {
+        "mern": [
+            "Explain the role of MongoDB in the MERN stack.",
+            "How does React manage state and component lifecycle?",
+            "What is middleware in Express.js and why is it important?",
+            "How does Node.js handle asynchronous operations?",
+            "How do REST APIs work in a MERN application?"
+        ],
+        "python": [
+            "What are Python decorators?",
+            "Explain list comprehensions with an example.",
+            "What is the Global Interpreter Lock (GIL)?",
+            "How does Python manage memory?",
+            "What are generators in Python?"
+        ],
+        "sql": [
+            "What is the difference between INNER JOIN and LEFT JOIN?",
+            "Explain normalization in databases.",
+            "What are indexes and why are they used?",
+            "Explain ACID properties.",
+            "What are window functions?"
+        ]
+    }
 
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  # This model IS available in v2
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a professional technical interviewer."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=0.3
-        )
+    questions = []
 
-        return response.choices[0].message.content
+    for key in QUESTION_BANK:
+        if key in tech_stack:
+            questions.extend(QUESTION_BANK[key])
 
-    except Exception as e:
-        # Re-raise so app.py fallback can catch it
-        raise RuntimeError(f"OpenAI API error: {str(e)}")
+    # Fallback questions
+    if not questions:
+        questions = [
+            "Explain a challenging technical problem you have solved.",
+            "How do you ensure code quality in your projects?",
+            "Describe your experience with system design."
+        ]
+
+    return questions[:5]   
