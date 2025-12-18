@@ -10,7 +10,7 @@ from utils import CANDIDATE_FIELDS, FIELD_QUESTIONS
 from llm import generate_technical_questions
 
 # --------------------------------------------------
-# Page configuration (MUST BE FIRST)
+# Page configuration
 # --------------------------------------------------
 st.set_page_config(
     page_title="TalentScout Hiring Assistant",
@@ -40,7 +40,7 @@ for key, value in defaults.items():
         st.session_state[key] = value
 
 # --------------------------------------------------
-# Theme Toggle Logic
+# Theme Toggle
 # --------------------------------------------------
 def toggle_theme():
     st.session_state.theme = "dark" if st.session_state.theme == "light" else "light"
@@ -48,7 +48,7 @@ def toggle_theme():
 is_dark = st.session_state.theme == "dark"
 
 # --------------------------------------------------
-# Frontend UI & CSS (Root Cause Fixes)
+# Frontend UI & CSS
 # --------------------------------------------------
 st.markdown(
     f"""
@@ -60,7 +60,6 @@ st.markdown(
         }}
 
         /* --- CONDITIONAL EXIT FIX --- */
-        /* This rule only exists when the user has typed exit */
         { '[data-testid="stChatMessageAvatarAssistant"] { display: none !important; }' if st.session_state.exited else "" }
         /* ---------------------------- */
 
@@ -204,10 +203,6 @@ for msg in st.session_state.messages:
 # User Input & Exit Handling Logic
 # --------------------------------------------------
 
-# Check if we should still show the input box
-# It disappears if:
-# 1. User typed 'exit' (exited is True)
-# 2. All technical questions are answered (index reached total questions)
 show_input = not st.session_state.exited and (
     not st.session_state.technical_questions_generated or 
     st.session_state.current_tech_question_index < len(st.session_state.technical_questions)
