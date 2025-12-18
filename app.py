@@ -151,7 +151,6 @@ if st.session_state.exited:
                 st.markdown(msg["content"], unsafe_allow_html=True)
     st.stop()
 
-# 1. Start conversation: Add persistent Greeting UI to chat history
 if not st.session_state.greeted:
     welcome_html = f"""
     <div class="welcome-screen">
@@ -168,14 +167,14 @@ if not st.session_state.greeted:
     st.session_state.messages.append({"role": "assistant", "content": welcome_html})
     st.session_state.greeted = True
 
-# 2. Add first question if not already there
+
 if not st.session_state.candidate_collection_complete and st.session_state.current_field_index < len(CANDIDATE_FIELDS):
     field = CANDIDATE_FIELDS[st.session_state.current_field_index]
     question = FIELD_QUESTIONS[field]
     if not any(question in m["content"] for m in st.session_state.messages):
         st.session_state.messages.append({"role": "assistant", "content": question})
 
-# 3. Handle technical question generation
+
 if st.session_state.candidate_collection_complete and not st.session_state.technical_questions_generated:
     st.session_state.messages.append({"role": "assistant", "content": "Thank you for sharing your details! ✅\n\nLet's begin the technical screening."})
     st.session_state.technical_questions = generate_technical_questions(
@@ -185,13 +184,13 @@ if st.session_state.candidate_collection_complete and not st.session_state.techn
     )
     st.session_state.technical_questions_generated = True
 
-# 4. Handle technical question flow
+
 if st.session_state.technical_questions_generated and st.session_state.current_tech_question_index < len(st.session_state.technical_questions):
     question = st.session_state.technical_questions[st.session_state.current_tech_question_index]
     if not any(question in m["content"] for m in st.session_state.messages):
         st.session_state.messages.append({"role": "assistant", "content": question})
 
-# Display Chat History
+
 for msg in st.session_state.messages:
     if "welcome-screen" in msg["content"]:
         st.markdown(msg["content"], unsafe_allow_html=True)
@@ -223,7 +222,8 @@ def validate_input(field, value):
     elif field == "email":
         if not re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", value): return False, "Invalid email address."
     elif field == "phone":
-        if not value.isdigit() or not (10 <= len(value) <= 15): return False, "Enter 10–15 digits only."
+        if not value.isdigit() or len(value) != 10: 
+            return False, "Enter exactly 10 digits."
     elif field == "experience":
         if not value.isdigit() or not (0 <= int(value) <= 50): return False, "Experience must be 0–50."
     elif field == "desired_role":

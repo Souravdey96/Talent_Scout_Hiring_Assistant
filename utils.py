@@ -4,7 +4,7 @@ utils.py
 Utility constants and helper structures for the TalentScout chatbot.
 """
 
-# Ordered list of candidate fields to collect
+
 CANDIDATE_FIELDS = [
     "full_name",
     "email",
@@ -15,7 +15,7 @@ CANDIDATE_FIELDS = [
     "tech_stack",
 ]
 
-# Corresponding questions for each field
+
 FIELD_QUESTIONS = {
     "full_name": "What is your full name?",
     "email": "What is your email address?",
