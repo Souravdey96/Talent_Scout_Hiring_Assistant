@@ -37,6 +37,7 @@ Bash
 cp .env.example .env
 
 Note: Ensure .env is listed in your .gitignore to protect sensitive data.
+
 4. Initialize the Model
 
 Run the model creation script once to generate the local .pkl weights.
