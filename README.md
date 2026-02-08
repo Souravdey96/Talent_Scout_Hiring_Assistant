@@ -1,6 +1,8 @@
 # Talent_Scout_Hiring_Assistant
 🤖 TalentScout Hiring Assistant
 
+Deployment Link : https://talentscouthiringassistant-j3znzsdraqo7uetph2g9r6.streamlit.app/
+
 An intelligent, Streamlit-powered recruitment assistant designed to automate the initial screening of technical candidates. The system gathers candidate profiles and generates tailored technical interview questions based on their specific tech stack.
 📖 Project Overview
 
